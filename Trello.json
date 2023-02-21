@@ -1,0 +1,2809 @@
+{
+	"info": {
+		"_postman_id": "8f00dacb-e4e7-4fb3-a349-5a70813ac6f2",
+		"name": "Trello Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23783345"
+	},
+	"item": [
+		{
+			"name": "Board",
+			"item": [
+				{
+					"name": "Create a board without credentials",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401 unauthorized\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"invalid key\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								""
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "c17048a7b7b5b1f98c8b3dc621761e0e",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "TC1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a board without a required query para(name)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 Bad Request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"invalid value for name\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								""
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a board without authorization(token)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401 unauthorized\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"unauthorized permission requested\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/?key={{key}}&name=Test Case 1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								""
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "name",
+									"value": "Test Case 1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.environment.set(\"board_id\", jsonData.id);\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.environment.set(\"organization_id\", jsonData.idOrganization);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/?key={{key}}&name=Test Case 1&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								""
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "name",
+									"value": "Test Case 1"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get created board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									" var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"checking boards data\", function () {\r",
+									"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"board_id\"));\r",
+									"});\r",
+									"pm.test(\"correct name\", function () {\r",
+									"    pm.expect(jsonData.name).to.eql(\"Test Case 1\");\r",
+									"});\r",
+									"pm.test(\"Board is not closed & not pinned\", function () {\r",
+									"    pm.expect(jsonData.closed).to.eql(false);\r",
+									"    pm.expect(jsonData.pinned).to.eql(false);\r",
+									"});\r",
+									"pm.test(\"checking voting\", function () {\r",
+									"    pm.expect(jsonData.prefs.voting).to.eql(\"disabled\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "name",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Memberships of a Board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"checking boards data\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].memberType).to.eql(\"admin\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}/memberships?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}",
+								"memberships"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a field on a Board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"checking if the valus is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData._value).to.eql(pm.environment.get(\"organization_id\"));\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}/idOrganization?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}",
+								"idOrganization"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get another field on a Board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"checking if the valus is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData._value).to.eql(false);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}/pinned?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}",
+								"pinned"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Actions of a Board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}/actions?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}",
+								"actions"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "board_id",
+									"value": "{{board_id}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Board with an invalid key",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}?key=key&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "key"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a board without authorization(token)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}?key={{key}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.environment.set(\"board_description\", jsonData.desc);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"63dd5645469f9d22b7315d73\",\r\n    \"name\": \"Test Case 10\",\r\n    \"desc\": \"Testing signup functionality\",\r\n    \"descData\": null,\r\n    \"closed\": false,\r\n    \"idOrganization\": \"{{organization_id}}\",\r\n    \"idEnterprise\": null,\r\n    \"pinned\": false,\r\n    \"url\": \"https://trello.com/b/SgrYlTfx/test-case-1\",\r\n    \"shortUrl\": \"https://trello.com/b/SgrYlTfx\",\r\n    \"prefs\": {\r\n        \"permissionLevel\": \"private\",\r\n        \"hideVotes\": false,\r\n        \"voting\": \"disabled\",\r\n        \"comments\": \"members\",\r\n        \"invitations\": \"members\",\r\n        \"selfJoin\": true,\r\n        \"cardCovers\": true,\r\n        \"isTemplate\": false,\r\n        \"cardAging\": \"regular\",\r\n        \"calendarFeedEnabled\": false,\r\n        \"hiddenPluginBoardButtons\": [],\r\n        \"switcherViews\": [\r\n            {\r\n                \"viewType\": \"Board\",\r\n                \"enabled\": true,\r\n                \"_id\": \"63daf2f8b2eff03f7cb7dfca\"\r\n            },\r\n            {\r\n                \"viewType\": \"Table\",\r\n                \"enabled\": true,\r\n                \"_id\": \"63daf2f8b2eff03f7cb7dfcb\"\r\n            },\r\n            {\r\n                \"viewType\": \"Calendar\",\r\n                \"enabled\": false,\r\n                \"_id\": \"63daf2f8b2eff03f7cb7dfcc\"\r\n            },\r\n            {\r\n                \"viewType\": \"Dashboard\",\r\n                \"enabled\": false,\r\n                \"_id\": \"63daf2f8b2eff03f7cb7dfcd\"\r\n            },\r\n            {\r\n                \"viewType\": \"Timeline\",\r\n                \"enabled\": false,\r\n                \"_id\": \"63daf2f8b2eff03f7cb7dfce\"\r\n            },\r\n            {\r\n                \"viewType\": \"Map\",\r\n                \"enabled\": false,\r\n                \"_id\": \"63daf2f8b2eff03f7cb7dfcf\"\r\n            }\r\n        ],\r\n        \"background\": \"green\",\r\n        \"backgroundColor\": \"#0079BF\",\r\n        \"backgroundImage\": null,\r\n        \"backgroundImageScaled\": null,\r\n        \"backgroundTile\": false,\r\n        \"backgroundBrightness\": \"dark\",\r\n        \"backgroundBottomColor\": \"#0079BF\",\r\n        \"backgroundTopColor\": \"#0079BF\",\r\n        \"canBePublic\": true,\r\n        \"canBeEnterprise\": true,\r\n        \"canBeOrg\": true,\r\n        \"canBePrivate\": true,\r\n        \"canInvite\": true\r\n    },\r\n    \"labelNames\": {\r\n        \"green\": \"\",\r\n        \"yellow\": \"\",\r\n        \"orange\": \"\",\r\n        \"red\": \"\",\r\n        \"purple\": \"\",\r\n        \"blue\": \"\",\r\n        \"sky\": \"\",\r\n        \"lime\": \"\",\r\n        \"pink\": \"\",\r\n        \"black\": \"\",\r\n        \"green_dark\": \"\",\r\n        \"yellow_dark\": \"\",\r\n        \"orange_dark\": \"\",\r\n        \"red_dark\": \"\",\r\n        \"purple_dark\": \"\",\r\n        \"blue_dark\": \"\",\r\n        \"sky_dark\": \"\",\r\n        \"lime_dark\": \"\",\r\n        \"pink_dark\": \"\",\r\n        \"black_dark\": \"\",\r\n        \"green_light\": \"\",\r\n        \"yellow_light\": \"\",\r\n        \"orange_light\": \"\",\r\n        \"red_light\": \"\",\r\n        \"purple_light\": \"\",\r\n        \"blue_light\": \"\",\r\n        \"sky_light\": \"\",\r\n        \"lime_light\": \"\",\r\n        \"pink_light\": \"\",\r\n        \"black_light\": \"\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get the updated board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"correct board_description\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.desc).to.eql(pm.environment.get(\"board_description\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Label on a Board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}/labels?key={{key}}&token={{token}}&name=eslam&color=red",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}",
+								"labels"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "name",
+									"value": "eslam"
+								},
+								{
+									"key": "color",
+									"value": "red"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Label on a Board without name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 bad request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"    pm.response.to.have.body(\"invalid value for name\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}/labels?key={{key}}&token={{token}}&color=%23FF0000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}",
+								"labels"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "name",
+									"value": "eslam",
+									"disabled": true
+								},
+								{
+									"key": "color",
+									"value": "%23FF0000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Labels on a Board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}/labels?key={{key}}&token={{token}}&name=eslam&color=%23FF0000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}",
+								"labels"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "name",
+									"value": "eslam"
+								},
+								{
+									"key": "color",
+									"value": "%23FF0000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a List on a Board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.environment.set(\"list_id\", jsonData.id);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}/lists?key={{key}}&token={{token}}&name=list 1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "name",
+									"value": "list 1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Lists on a Board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].name).to.eql(\"list 1\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}/lists?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/1/tokens/{{token}}/member?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"tokens",
+								"{{token}}",
+								"member"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cards",
+			"item": [
+				{
+					"name": "Create a new Card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.environment.set(\"card_id\", jsonData.id);\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/cards/?key={{key}}&name={{card_name}}&token={{token}}&idList={{list_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"cards",
+								""
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "name",
+									"value": "{{card_name}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "idList",
+									"value": "{{list_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"card_id\"));\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/cards/{{card_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"cards",
+								"{{card_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a Card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{card_name}}\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/1/cards/{{card_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"cards",
+								"{{card_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get the updated card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"card_name\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/1/cards/{{card_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"cards",
+								"{{card_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Checklists",
+			"item": [
+				{
+					"name": "Create Checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"pm.environment.set(\"checklist_id\", response.id);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"correct checklist name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eql(\"checklist1\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/checklists?idCard={{card_id}}&key={{key}}&token={{token}}&name=checklist1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"checklists"
+							],
+							"query": [
+								{
+									"key": "idCard",
+									"value": "{{card_id}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "name",
+									"value": "checklist1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"correct checklist name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eql(\"checklist1\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/checklists/{{checklist_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"checklists",
+								"{{checklist_id}}"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a Checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check updated name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eql(\"checklist187\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"63dec9d88394f774295feac9\",\r\n    \"name\": \"checklist187\",\r\n    \"idBoard\": \"63decadc8564fc7872918d8b\",\r\n    \"idCard\": \"{{card_id}}\",\r\n    \"pos\": 16384,\r\n    \"checkItems\": [],\r\n    \"limits\": {}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/1/checklists/{{checklist_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"checklists",
+								"{{checklist_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Updated Checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.trello.com/1/checklists/{{checklist_id}}?key={{key}}&token={{token}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"trello",
+								"com"
+							],
+							"path": [
+								"1",
+								"checklists",
+								"{{checklist_id}}"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get field on a Checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/checklists/{{checklist_id}}/name?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"checklists",
+								"{{checklist_id}}",
+								"name"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update field on a Checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"cheching updated field name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eql(\"\\\"checklist7\\\"\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/1/checklists/{{checklist_id}}/name?value=\"checklist7\"&key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"checklists",
+								"{{checklist_id}}",
+								"name"
+							],
+							"query": [
+								{
+									"key": "value",
+									"value": "\"checklist7\""
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get the Board the Checklist is on",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"board_id\"));\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/checklists/{{checklist_id}}/board?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"checklists",
+								"{{checklist_id}}",
+								"board"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get the Card a Checklist is on",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].id).to.eql(pm.environment.get(\"card_id\"));\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/checklists/{{checklist_id}}/cards?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"checklists",
+								"{{checklist_id}}",
+								"cards"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Checkitem on Checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"pm.environment.set(\"item_id\", response.id);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"correct item status & name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.state).to.eql(\"incomplete\");\r",
+									"    pm.expect(jsonData.name).to.eql(\"item1\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/checklists/{{checklist_id}}/checkItems?name=item1&key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"checklists",
+								"{{checklist_id}}",
+								"checkItems"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "item1"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Checkitems on a Checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/checklists/{{checklist_id}}/checkItems?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"checklists",
+								"{{checklist_id}}",
+								"checkItems"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Checkitem on a Checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/checklists/{{checklist_id}}/checkItems/{{item_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"checklists",
+								"{{checklist_id}}",
+								"checkItems",
+								"{{item_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Checkitem from Checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/checklists/{{checklist_id}}/checkItems/{{item_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"checklists",
+								"{{checklist_id}}",
+								"checkItems",
+								"{{item_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Deleted Checkitem on a Checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"    pm.response.to.have.body(\"model not found\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/checklists/{{checklist_id}}/checkItems/{{item_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"checklists",
+								"{{checklist_id}}",
+								"checkItems",
+								"{{item_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://api.trello.com/1/checklists/{{checklist_id}}?key={{key}}&token={{token}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"trello",
+								"com"
+							],
+							"path": [
+								"1",
+								"checklists",
+								"{{checklist_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Deleted Checklist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"    pm.response.to.have.body(\"The requested resource was not found.\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.trello.com/1/checklists/{{checklist_id}}?key={{key}}&token={{token}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"trello",
+								"com"
+							],
+							"path": [
+								"1",
+								"checklists",
+								"{{checklist_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Members",
+			"item": [
+				{
+					"name": "Invite Member to Board via email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.environment.set(\"idMember for normal user\", jsonData.members[1].id);\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.environment.set(\"idMember for admin\", jsonData.members[0].id);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}/members?email=eslam.mashaly217@gmail.com&key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}",
+								"members"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "eslam.mashaly217@gmail.com"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a Member to a Board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}/members/{{idMember for normal user}}?type=normal&key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}",
+								"members",
+								"{{idMember for normal user}}"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "normal"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get the Members of a Board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/members/{{idMember for admin}}/notifications?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"members",
+								"{{idMember for admin}}",
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove a Member from Board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}/members/{{idMember for normal user}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}",
+								"members",
+								"{{idMember for normal user}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Organizations",
+			"item": [
+				{
+					"name": "Create a new Organization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"pm.environment.set(\"organization_id\", response.id);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/organizations?displayName=organization&key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"organizations"
+							],
+							"query": [
+								{
+									"key": "displayName",
+									"value": "organization"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get an Organization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"organization_id\"));\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/organizations/{{organization_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"organizations",
+								"{{organization_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update an Organization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"63dea2d7ff7ca3923759deff\",\r\n    \"name\": \"organiztion8kshk\",\r\n    \"displayName\": \"organiztional\",\r\n    \"desc\": \"\",\r\n    \"descData\": {\r\n        \"emoji\": {}\r\n    },\r\n    \"url\": \"https://trello.com/w/organiztion4\",\r\n    \"website\": null,\r\n    \"teamType\": null,\r\n    \"logoHash\": null,\r\n    \"logoUrl\": null,\r\n    \"products\": [],\r\n    \"powerUps\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/1/organizations/{{organization_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"organizations",
+								"{{organization_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get field on Organization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/1/organizations/{{organization_id}}/name?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"organizations",
+								"{{organization_id}}",
+								"name"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Actions for Organization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/1/organizations/{{organization_id}}/actions?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"organizations",
+								"{{organization_id}}",
+								"actions"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Memberships of an Organization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/1/organizations/{{organization_id}}/memberships?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"organizations",
+								"{{organization_id}}",
+								"memberships"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update an Organization's Members",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"63dea2d7ff7ca3923759deff\",\r\n    \"name\": \"organiztion8\",\r\n    \"displayName\": \"organiztional\",\r\n    \"desc\": \"\",\r\n    \"descData\": {\r\n        \"emoji\": {}\r\n    },\r\n    \"url\": \"https://trello.com/w/organiztion4\",\r\n    \"website\": null,\r\n    \"teamType\": null,\r\n    \"logoHash\": null,\r\n    \"logoUrl\": null,\r\n    \"products\": [],\r\n    \"powerUps\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/1/organizations/{{organization_id}}/members?email=mohamedelArcaab@gmail.com&fullName=Ahmed Elsayed&key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"organizations",
+								"{{organization_id}}",
+								"members"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "mohamedelArcaab@gmail.com"
+								},
+								{
+									"key": "fullName",
+									"value": "Ahmed Elsayed"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove a Member from an Organization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"63dea2d7ff7ca3923759deff\",\r\n    \"name\": \"organiztion8\",\r\n    \"displayName\": \"organiztional\",\r\n    \"desc\": \"\",\r\n    \"descData\": {\r\n        \"emoji\": {}\r\n    },\r\n    \"url\": \"https://trello.com/w/organiztion4\",\r\n    \"website\": null,\r\n    \"teamType\": null,\r\n    \"logoHash\": null,\r\n    \"logoUrl\": null,\r\n    \"products\": [],\r\n    \"powerUps\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/1/organizations/{{organization_id}}/members/{{idMember for normal user}}/?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"organizations",
+								"{{organization_id}}",
+								"members",
+								"{{idMember for normal user}}",
+								""
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "type",
+									"value": "normal",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove an Organization",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/organizations/{{organization_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"organizations",
+								"{{organization_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Deleted Organization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/organizations/{{organization_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"organizations",
+								"{{organization_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete Board",
+			"item": [
+				{
+					"name": "Delete board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData._value).to.eql(null);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get the deleted board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404 not found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"    pm.response.to.have.body(\"The requested resource was not found.\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Redelete the board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404 not found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"    pm.response.to.have.body(\"The requested resource was not found.\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/1/boards/{{board_id}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{board_id}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Response time is less than 3000ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+					"});"
+				]
+			}
+		}
+	]
+}

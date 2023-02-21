@@ -1,0 +1,87 @@
+{
+	"id": "2e278a70-bc82-488f-a002-dd77e381e79e",
+	"name": "Production",
+	"values": [
+		{
+			"key": "base_url",
+			"value": "https://api.trello.com",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "key",
+			"value": "c17048a7b7b5b1f98c8b3dc621761e0e",
+			"type": "secret",
+			"enabled": true
+		},
+		{
+			"key": "token",
+			"value": "81645688dcba9514050bf3c19bf4b4a7f418d953eb8a3620e91040077183c9ab",
+			"type": "secret",
+			"enabled": true
+		},
+		{
+			"key": "board_id",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "board_description",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "list_id",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "card_id",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "card_name",
+			"value": "card 2",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "checklist_id",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "item_id",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "idMember for normal user",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "idMember for admin",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "organization_id",
+			"value": "63442f6f263509019614ec3e",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2023-02-21T16:14:26.088Z",
+	"_postman_exported_using": "Postman/10.10.6"
+}

@@ -1,0 +1,8 @@
+npm install -g newman
+newman run D:\trello_project\Trello.json -e D:\trello_project\Trello_environment.json -d D:\trello_project\card.csv
+
+report
+
+npm install -g newman-reporter-htmlextra
+
+newman run D:\trello_project\Trello.json -e D:\trello_project\Trello_environment.json -d D:\trello_project\card.csv -r htmlextra
